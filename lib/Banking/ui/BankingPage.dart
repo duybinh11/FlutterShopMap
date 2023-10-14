@@ -1,14 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login/Banking/Bank/bloc/banking_bloc.dart';
 import 'package:login/ItemDetail/bloc/item_detail_bloc.dart';
-import 'package:login/Model/Order.dart';
+
 import 'package:login/OrderDetail/bloc/order_bloc.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 
 import '../../Login/bloc/login_bloc.dart';
 import '../../Model/Item.dart';
+
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 class MbPage extends StatefulWidget {
   static const String nameRoute = '/MbPage';
@@ -34,7 +37,6 @@ class _MbPageState extends State<MbPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Thanh toán trực tuyến'),
@@ -51,10 +53,16 @@ class _MbPageState extends State<MbPage> {
               onPaymentSuccess: (map) {
                 if (map['vnp_TransactionStatus'] == '00') {
                   status = 'thanh cong';
+                  int idBill = context.read<OrderBloc>().idBill!;
+                  int? amount = int.tryParse(map['vnp_Amount']);
+                  String bankCode = map['vnp_BankCode'] as String;
+                  context.read<BankingBloc>().add(EBankingVnpay(
+                      idBill: idBill,
+                      amount: amount!,
+                      bankCode: bankCode,
+                      payStatus: true));
                 }
-                if (map['vnp_TransactionStatus'] == '24') {
-                  status = 'chua thanh toan';
-                }
+
                 context
                     .read<BankingBloc>()
                     .add(EBankStatus(isSuccess: true, status: status));
@@ -68,15 +76,27 @@ class _MbPageState extends State<MbPage> {
             );
           }
           if (state is SBankingResult) {
-            print(state.status);
             return state.isSuccess
-                ? Text(status)
+                ? Center(
+                    child: Image.network(
+                        'https://cdn-icons-png.flaticon.com/128/677/677069.png'),
+                  )
                 : Center(
                     child: SizedBox(
                       height: 50,
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
+                            int idUser = context.read<LoginBloc>().acc!.id;
+                            Item item =
+                                context.read<ItemDetailBloc>().itemDetail!;
+                            int count = context.read<ItemDetailBloc>().count;
+                            String pay = context.read<OrderBloc>().pay!;
+                            context.read<OrderBloc>().add(EOrderBuy(
+                                idUser: idUser,
+                                idItem: item.id,
+                                sl: count,
+                                pay: pay));
                             context.read<BankingBloc>().add(EbankingUrl());
                           },
                           child: const Center(child: Text('thanh toan'))),
@@ -88,4 +108,15 @@ class _MbPageState extends State<MbPage> {
       ),
     );
   }
+}
+
+Future<String> geturl() async {
+  Uri uri = Uri.parse('http://10.0.2.2:8000/api/vnpay');
+  http.Response response = await http.post(uri);
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> map = jsonDecode(response.body);
+    return map['data'];
+  }
+  return 'dd';
 }

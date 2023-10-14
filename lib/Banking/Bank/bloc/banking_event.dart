@@ -16,6 +16,17 @@ class EBankStatus extends BankingEvent {
   });
 }
 
+class EBankingVnpay extends BankingEvent {
+  int idBill;
+  int amount;
+  String bankCode;
+  bool payStatus;
+  EBankingVnpay(
+      {required this.idBill,
+      required this.amount,
+      required this.bankCode,
+      required this.payStatus});
+}
 
 class EBankingBill extends BankingEvent {
   String pay;
@@ -38,16 +49,5 @@ class EBankingOrder extends BankingEvent {
     required this.idItem,
     required this.sl,
     required this.pay,
-  });
-}
-
-class EBankingVnpay extends BankingEvent {
-  int id;
-  int cost;
-  String bankCode;
-  EBankingVnpay({
-    required this.id,
-    required this.cost,
-    required this.bankCode,
   });
 }

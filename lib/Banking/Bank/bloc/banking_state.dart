@@ -8,6 +8,7 @@ final class BankingInitial extends BankingState {}
 
 final class SBankingLoading extends BankingState {}
 
+
 class SBankingUrl extends BankingState {
   String url;
   SBankingUrl({

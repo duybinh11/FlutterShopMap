@@ -36,6 +36,7 @@ dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.1
   vnpay_flutter: ^1.0.1
+  webview_flutter: ^4.4.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -15,6 +15,7 @@ class BankingBloc extends Bloc<BankingEvent, BankingState> {
   BankingBloc() : super(BankingInitial()) {
     on<EbankingUrl>(getUrl);
     on<EBankStatus>(changestatus);
+    on<EBankingVnpay>(vnpay);
   }
   FutureOr<void> getUrl(EbankingUrl event, Emitter<BankingState> emit) async {
     emit(SBankingLoading());
@@ -27,7 +28,12 @@ class BankingBloc extends Bloc<BankingEvent, BankingState> {
     emit(SBankingLoading());
     isSuccess = event.isSuccess;
     status = event.status;
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     emit(SBankingResult(isSuccess: isSuccess, status: status));
+  }
+
+  FutureOr<void> vnpay(EBankingVnpay event, Emitter<BankingState> emit) {
+    api.createVnpay(
+        event.idBill, event.amount, event.bankCode, event.payStatus);
   }
 }

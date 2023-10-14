@@ -10,6 +10,7 @@ part 'order_state.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   final apiItem = ApiItem();
+  int? idBill;
   String? pay = 'Thanh Toán sau khi nhận hàng';
   OrderBloc() : super(OrderInitial()) {
     on<EOrderGetPay>(getPay);
@@ -22,7 +23,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   FutureOr<void> buyItem(EOrderBuy event, Emitter<OrderState> emit) async {
     emit(SOrderLoading());
-    bool check = await apiItem.buyItem(event.idUser, event.idItem, event.sl,event.pay);
-    emit(SOrderBuyItem(check: check));
+    dynamic check =
+        await apiItem.buyItem(event.idUser, event.idItem, event.sl, event.pay);
+    if (check is int) {
+      idBill = check;
+      emit(SOrderBuyItem(check: true));
+    } else {
+      emit(SOrderBuyItem(check: false));
+    }
   }
 }

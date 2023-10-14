@@ -76,7 +76,8 @@ class ApiItem {
     return false;
   }
 
-  Future<bool> buyItem(int idUser, int idItem, int count, String? pay) async {
+  Future<dynamic> buyItem(
+      int idUser, int idItem, int count, String? pay) async {
     Uri uri = Uri.parse('http://10.0.2.2:8000/api/order/buyItem');
     http.Response response = await http.post(uri, body: {
       'idUser': idUser.toString(),
@@ -86,10 +87,13 @@ class ApiItem {
     });
 
     if (response.statusCode == 200) {
-      print(response.body);
-      return jsonDecode(response.body);
+      
+      Map<String, dynamic> map = jsonDecode(response.body);
+      bool status = map['status'] as bool;
+      if (status) {
+        return map['id_bill'];
+      }
     }
-    print(response.statusCode);
     return false;
   }
 
@@ -139,5 +143,13 @@ class ApiItem {
     return 0;
   }
 
+  Future<void> createVnpay(
+      int idBill, int cost, String bankCode, bool status) async {
+    String url =
+        'http://10.0.2.2:8000/api/vnpay/createBillAndUpdateBill/id_bill/$idBill/cost/$cost/bank_code/$bankCode/status/$status';
+    Uri uri = Uri.parse(url);
+    http.Response response = await http.get(uri);
 
+   
+  }
 }

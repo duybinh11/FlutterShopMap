@@ -6,8 +6,6 @@ import 'package:login/Model/Order.dart';
 import 'package:login/OrderDetail.dart/ui/OrderDetail.dart';
 import 'package:login/OrderList/bloc/order_list_bloc.dart';
 
-import '../../Model/Item.dart';
-import '../../OrderDetail/ui/OrderDetaliPage.dart';
 import 'OrderMainCustom.dart';
 
 class OrderMainPage extends StatefulWidget {
@@ -28,6 +26,7 @@ class _OrderMainPageState extends State<OrderMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Đơn Hàng'),

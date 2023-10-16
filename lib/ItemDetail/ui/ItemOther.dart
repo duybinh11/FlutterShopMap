@@ -5,10 +5,21 @@ import 'package:login/ItemDetail/bloc/item_detail_bloc.dart';
 import '../../Home/bloc/home_bloc.dart';
 import '../../Home/ui/Customitem.dart';
 
-class ItemOhter extends StatelessWidget {
+class ItemOhter extends StatefulWidget {
   const ItemOhter({
     super.key,
   });
+
+  @override
+  State<ItemOhter> createState() => _ItemOhterState();
+}
+
+class _ItemOhterState extends State<ItemOhter> {
+  @override
+  void initState() {
+    context.read<ItemDetailBloc>().add(EItemDetailGetAll());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

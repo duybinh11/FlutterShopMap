@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:login/Model/CartModel.dart';
 import 'package:login/Model/Item.dart';
 import 'package:login/Model/Order.dart';
+import 'package:login/Model/ShopModel.dart';
+import 'package:login/Model/VnpayModel.dart';
 
 class ApiItem {
   Future<List<Item>> getAllItem(int currentPage) async {
@@ -87,7 +89,6 @@ class ApiItem {
     });
 
     if (response.statusCode == 200) {
-      
       Map<String, dynamic> map = jsonDecode(response.body);
       bool status = map['status'] as bool;
       if (status) {
@@ -120,9 +121,10 @@ class ApiItem {
     return [];
   }
 
-  Future<String> geturl() async {
+  Future<String> geturl(int cost) async {
     Uri uri = Uri.parse('http://10.0.2.2:8000/api/vnpay');
-    http.Response response = await http.post(uri);
+    http.Response response =
+        await http.post(uri, body: {'cost': cost.toString()});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(response.body);
@@ -144,12 +146,40 @@ class ApiItem {
   }
 
   Future<void> createVnpay(
-      int idBill, int cost, String bankCode, bool status) async {
+      int idBill, int? cost, String? bankCode, bool status) async {
     String url =
         'http://10.0.2.2:8000/api/vnpay/createBillAndUpdateBill/id_bill/$idBill/cost/$cost/bank_code/$bankCode/status/$status';
     Uri uri = Uri.parse(url);
     http.Response response = await http.get(uri);
+    print(response.statusCode);
+  }
 
-   
+  Future<dynamic> getVnpay(int idBill) async {
+    Uri uri =
+        Uri.parse('http://10.0.2.2:8000/api/vnpay/getvnpay/id_bill/$idBill');
+    http.Response response = await http.get(uri);
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map<String, dynamic> map = jsonDecode(response.body);
+      bool b = map['status'] as bool;
+      if (b) {
+        return VnpayModel.fromMap(map['data']);
+      } else {}
+    }
+    return false;
+  }
+
+  Future<dynamic> getShop(int idItem) async {
+    Uri uri = Uri.parse(
+        'http://10.0.2.2:8000/api/itemdetail/get_shop/id_item/$idItem');
+
+    http.Response response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(response.body);
+      print(map['data']);
+      return Shop.fromMap(map['data']);
+    }
+    return false;
   }
 }

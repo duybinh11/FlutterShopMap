@@ -18,6 +18,13 @@ class EItemDetailGetItem extends ItemDetailEvent {
   });
 }
 
+class EItemDetailGetShop extends ItemDetailEvent {
+  int idItem;
+  EItemDetailGetShop({
+    required this.idItem,
+  });
+}
+
 class EItemDetailGetAll extends ItemDetailEvent {}
 
 class EItemDetailAddCart extends ItemDetailEvent {

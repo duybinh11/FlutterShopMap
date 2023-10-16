@@ -8,7 +8,6 @@ final class BankingInitial extends BankingState {}
 
 final class SBankingLoading extends BankingState {}
 
-
 class SBankingUrl extends BankingState {
   String url;
   SBankingUrl({
@@ -18,9 +17,6 @@ class SBankingUrl extends BankingState {
 
 class SBankingResult extends BankingState {
   bool isSuccess;
-  String status;
-  SBankingResult({
-    required this.isSuccess,
-    required this.status,
-  });
+  bool isPay;
+  SBankingResult({required this.isSuccess, required this.isPay});
 }

@@ -15,8 +15,8 @@ class SItemDetailGetItem extends ItemDetailState {
   SItemDetailGetItem({
     required this.item,
   });
-  
 }
+
 class SItemDetailGetAll extends ItemDetailState {
   List<Item> lists;
   SItemDetailGetAll({
@@ -35,5 +35,12 @@ class SItemDetailAddCart extends ItemDetailState {
   bool result;
   SItemDetailAddCart({
     required this.result,
+  });
+}
+
+class SItemDetailGetShop extends ItemDetailState {
+  Shop shop;
+  SItemDetailGetShop({
+    required this.shop,
   });
 }

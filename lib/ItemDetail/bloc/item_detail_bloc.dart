@@ -6,6 +6,7 @@ import 'package:login/ItemDetail/ui/ItemDetailPage.dart';
 import 'package:meta/meta.dart';
 
 import '../../Model/Item.dart';
+import '../../Model/ShopModel.dart';
 
 part 'item_detail_event.dart';
 part 'item_detail_state.dart';
@@ -19,6 +20,7 @@ class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
     on<EItemDetailGetItem>(getItem);
     on<EItemDetailAddCart>(addCart);
     on<EItemDetailGetAll>(getAll);
+    on<EItemDetailGetShop>(getShop);
   }
 
   FutureOr<void> update(
@@ -50,5 +52,13 @@ class ItemDetailBloc extends Bloc<ItemDetailEvent, ItemDetailState> {
       EItemDetailGetAll event, Emitter<ItemDetailState> emit) async {
     List<Item> listItem = await apiItem.getAllItem(1);
     emit(SItemDetailGetAll(lists: listItem));
+  }
+
+  FutureOr<void> getShop(
+      EItemDetailGetShop event, Emitter<ItemDetailState> emit) async {
+    dynamic result = await apiItem.getShop(event.idItem);
+    if (result is Shop) {
+      emit(SItemDetailGetShop(shop: result));
+    }
   }
 }

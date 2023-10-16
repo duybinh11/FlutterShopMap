@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../Home/ui/HomePage.dart';
+import '../../Home/ui/HomeSelectPage.dart';
 import '../bloc/login_bloc.dart';
 import 'LoginPage.dart';
 
@@ -28,7 +29,7 @@ class _WellcomeState extends State<Wellcome> {
         listener: (context, state) {
           if (state is SLoginToken) {
             if (state.result) {
-              Navigator.pushReplacementNamed(context, HomePage.nameRoute);
+              Navigator.pushReplacementNamed(context, HomeSelectPage.nameRoute);
             } else {
               Navigator.pushReplacementNamed(context, Login.nameRoute);
             }

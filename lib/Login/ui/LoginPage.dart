@@ -5,6 +5,8 @@ import 'package:login/Login/bloc/login_bloc.dart';
 import 'package:login/Register/ui/RegisterPage.dart';
 import 'package:login/main.dart';
 
+import '../../Home/ui/HomeSelectPage.dart';
+
 class Login extends StatelessWidget {
   Login({
     super.key,
@@ -37,7 +39,7 @@ class Login extends StatelessWidget {
       body: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is SLoginResult) {
-            Navigator.pushReplacementNamed(context, HomePage.nameRoute);
+            Navigator.pushReplacementNamed(context, HomeSelectPage.nameRoute);
           }
           if (state is SloginErorr) {
             String conten = 'Email  và Password không hợp lệ';

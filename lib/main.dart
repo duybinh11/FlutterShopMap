@@ -5,10 +5,12 @@ import 'package:login/Cart/bloc/cart_bloc.dart';
 import 'package:login/Cart/ui/CartPage.dart';
 import 'package:login/Home/bloc/home_bloc.dart';
 import 'package:login/Home/ui/HomePage.dart';
+import 'package:login/Home/ui/HomeSelectPage.dart';
 import 'package:login/ItemDetail/bloc/item_detail_bloc.dart';
 import 'package:login/ItemDetail/ui/ItemDetailPage.dart';
 import 'package:login/Login/bloc/login_bloc.dart';
 import 'package:login/Banking/ui/BankingPage.dart';
+import 'package:login/OrderDetail.dart/bloc/order_detail_bloc.dart';
 import 'package:login/OrderDetail.dart/ui/OrderDetail.dart';
 import 'package:login/OrderDetail/bloc/order_bloc.dart';
 import 'package:login/OrderDetail/ui/OrderDetaliPage.dart';
@@ -62,6 +64,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<BankingBloc>(
           create: (context) => BankingBloc(),
         ),
+        BlocProvider<OrderDetailBloc>(
+          create: (context) => OrderDetailBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -75,7 +80,8 @@ class _MyAppState extends State<MyApp> {
           OrderDetailPage.routeName: (context) => const OrderDetailPage(),
           OrderMainPage.nameRoute: (context) => const OrderMainPage(),
           MbPage.nameRoute: (context) => const MbPage(),
-          OrderDetailList.routeName: (context) => const OrderDetailList()
+          OrderDetailList.routeName: (context) => const OrderDetailList(),
+          HomeSelectPage.nameRoute: (context) => const HomeSelectPage()
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

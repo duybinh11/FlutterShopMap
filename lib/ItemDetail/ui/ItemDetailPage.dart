@@ -27,12 +27,18 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
 
   @override
   void initState() {
-    context.read<ItemDetailBloc>().add(EItemDetailGetAll());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> map =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    Item itemDetail = map['itemDetail'] as Item;
+    context.read<ItemDetailBloc>().add(EItemDetailGetItem(id: itemDetail.id));
+    context
+        .read<ItemDetailBloc>()
+        .add(EItemDetailGetShop(idItem: itemDetail.id));
     return BlocConsumer<ItemDetailBloc, ItemDetailState>(
       listener: (context, state) {
         if (state is SItemDetailLoadingDialog) {
@@ -59,6 +65,9 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
       },
       buildWhen: (previous, current) {
         if (current is SItemDetailGetItem) {
+          return true;
+        }
+        if (current is SItemDetailLoading) {
           return true;
         }
         return false;

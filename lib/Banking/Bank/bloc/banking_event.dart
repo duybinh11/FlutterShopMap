@@ -5,26 +5,29 @@ part of 'banking_bloc.dart';
 sealed class BankingEvent {}
 
 // ignore: must_be_immutable
-class EbankingUrl extends BankingEvent {}
+class EbankingUrl extends BankingEvent {
+  int cost;
+  EbankingUrl({
+    required this.cost,
+  });
+}
 
 class EBankStatus extends BankingEvent {
   bool isSuccess;
-  String status;
   EBankStatus({
     required this.isSuccess,
-    required this.status,
   });
 }
 
 class EBankingVnpay extends BankingEvent {
   int idBill;
-  int amount;
-  String bankCode;
+  int? amount;
+  String? bankCode;
   bool payStatus;
   EBankingVnpay(
       {required this.idBill,
-      required this.amount,
-      required this.bankCode,
+      this.amount,
+      this.bankCode,
       required this.payStatus});
 }
 
@@ -36,6 +39,13 @@ class EBankingBill extends BankingEvent {
     required this.pay,
     required this.status,
     required this.ngay,
+  });
+}
+
+class EBankingIsPay extends BankingEvent {
+  bool isPay;
+  EBankingIsPay({
+    required this.isPay,
   });
 }
 

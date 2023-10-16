@@ -40,31 +40,40 @@ class OrderMainCustom extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Text(
-                item.name,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: Text(
+                    item.name,
+                    style: const TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.amber),
+                  ),
+                ),
               ),
-            ),
-            Text(
-              'Giá : ${item.cost}',
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
-            ),
-            Text('Số Lượng : ${item.cost}',
-                style:
-                    const TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-            Text('Tiền : ${item.cost * order.sl}',
-                style:
-                    const TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-            Text('ngay mua : ${order.ngay}',
-                style:
-                    const TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-          ],
+              Text(
+                'Giá : ${item.cost}',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(order.bill.statusPay ? 'Đã thanh toán' : 'Chưa thanh toán',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500)),
+              Text('Tiền : ${item.cost * order.sl}',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500)),
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          ),
         )
       ]),
     );

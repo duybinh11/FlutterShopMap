@@ -9,10 +9,6 @@ import 'package:vnpay_flutter/vnpay_flutter.dart';
 import '../../Login/bloc/login_bloc.dart';
 import '../../Model/Item.dart';
 
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 class MbPage extends StatefulWidget {
   static const String nameRoute = '/MbPage';
   const MbPage({super.key});
@@ -23,15 +19,11 @@ class MbPage extends StatefulWidget {
 
 class _MbPageState extends State<MbPage> {
   bool success = false;
-  String status = '';
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   void initState() {
-    context.read<BankingBloc>().add(EBankStatus(isSuccess: false, status: ''));
+    context.read<BankingBloc>().add(EBankStatus(
+          isSuccess: false,
+        ));
     super.initState();
   }
 
@@ -52,7 +44,6 @@ class _MbPageState extends State<MbPage> {
               paymentUrl: state.url,
               onPaymentSuccess: (map) {
                 if (map['vnp_TransactionStatus'] == '00') {
-                  status = 'thanh cong';
                   int idBill = context.read<OrderBloc>().idBill!;
                   int? amount = int.tryParse(map['vnp_Amount']);
                   String bankCode = map['vnp_BankCode'] as String;
@@ -61,25 +52,31 @@ class _MbPageState extends State<MbPage> {
                       amount: amount!,
                       bankCode: bankCode,
                       payStatus: true));
+                  context.read<BankingBloc>().add(EBankingIsPay(isPay: true));
                 }
-
-                context
-                    .read<BankingBloc>()
-                    .add(EBankStatus(isSuccess: true, status: status));
+                context.read<BankingBloc>().add(EBankStatus(
+                      isSuccess: true,
+                    ));
               },
               onPaymentError: (params) {
-                status = 'chua thanh toan';
+                print('chua thanh toan');
+                int idBill = context.read<OrderBloc>().idBill!;
                 context
                     .read<BankingBloc>()
-                    .add(EBankStatus(isSuccess: true, status: status));
+                    .add(EBankingVnpay(idBill: idBill, payStatus: false));
+                context.read<BankingBloc>().add(EBankStatus(isSuccess: false));
+                context.read<BankingBloc>().add(EBankStatus(
+                      isSuccess: true,
+                    ));
               },
             );
           }
           if (state is SBankingResult) {
             return state.isSuccess
                 ? Center(
-                    child: Image.network(
-                        'https://cdn-icons-png.flaticon.com/128/677/677069.png'),
+                    child: Image.network(state.isPay
+                        ? 'https://cdn-icons-png.flaticon.com/128/677/677069.png'
+                        : 'https://cdn-icons-png.flaticon.com/128/2797/2797387.png'),
                   )
                 : Center(
                     child: SizedBox(
@@ -92,12 +89,15 @@ class _MbPageState extends State<MbPage> {
                                 context.read<ItemDetailBloc>().itemDetail!;
                             int count = context.read<ItemDetailBloc>().count;
                             String pay = context.read<OrderBloc>().pay!;
+
                             context.read<OrderBloc>().add(EOrderBuy(
                                 idUser: idUser,
                                 idItem: item.id,
                                 sl: count,
                                 pay: pay));
-                            context.read<BankingBloc>().add(EbankingUrl());
+                            context
+                                .read<BankingBloc>()
+                                .add(EbankingUrl(cost: count * item.cost));
                           },
                           child: const Center(child: Text('thanh toan'))),
                     ),
@@ -108,15 +108,4 @@ class _MbPageState extends State<MbPage> {
       ),
     );
   }
-}
-
-Future<String> geturl() async {
-  Uri uri = Uri.parse('http://10.0.2.2:8000/api/vnpay');
-  http.Response response = await http.post(uri);
-
-  if (response.statusCode == 200) {
-    Map<String, dynamic> map = jsonDecode(response.body);
-    return map['data'];
-  }
-  return 'dd';
 }
